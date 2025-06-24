@@ -29,6 +29,7 @@ struct HorseRow: View {
                     
                     Text(String(format: "%.0f км/ч", speedKMH))
                         .font(.caption2)
+                        .frame(width: 60)
                         .foregroundStyle(.secondary)
                 }
                 .offset(x: CGFloat(horse.progress) * (trackWidth - 36))
