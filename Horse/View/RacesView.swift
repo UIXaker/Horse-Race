@@ -22,11 +22,11 @@ struct RacesView: View {
             .frame(height: 260)
             
             HStack(spacing: 24) {
-                Button("Старт") { model.start() }
+                Button("Старт", action: model.start)
                     .buttonStyle(.borderedProminent)
                     .disabled(model.isRunning)
                 
-                Button("Рестарт") { model.restart() }
+                Button("Рестарт", action: model.restart)
                     .buttonStyle(.bordered)
             }
             .font(.title3)
