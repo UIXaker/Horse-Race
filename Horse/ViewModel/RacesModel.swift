@@ -31,6 +31,7 @@ final class RacesModel {
     func start() {
         guard !isRunning else { return }
         
+        restart()
         isRunning = true
         raceStart = Date()
         raceTask = Task { await raceLoop() }

@@ -5,7 +5,7 @@ struct RacesView: View {
     @State private var isExpanded: Bool = false
     
     var body: some View {
-        VStack {
+        VStack(spacing: 6) {
             Text("Дистанция: \(Int(model.trackLength)) м")
                 .font(.title)
                 .bold()
@@ -43,6 +43,9 @@ struct RacesView: View {
                 isExpanded.toggle()
             }
             
+            
+            
+            
             Spacer()
             
             Picker("Дистанция", selection: $model.trackLength) {
@@ -50,20 +53,22 @@ struct RacesView: View {
                     Text("\(Int(option)) м").tag(option)
                 }
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(.menu)
             .disabled(model.isRunning)
             .padding(.horizontal, 12)
             
-            HStack(spacing: 24) {
-                Button("Старт", action: model.start)
-                    .buttonStyle(.borderedProminent)
-                    .disabled(model.isRunning)
-                
-                Button("Рестарт", action: model.restart)
-                    .buttonStyle(.bordered)
+            Button(action: model.isRunning ? model.restart : model.start) {
+                Text(model.isRunning ? "Рестарт" : "Старт")
+                    .foregroundStyle(model.isRunning ? .blue : .green)
             }
-            .font(.title3)
-            .padding(.top, 24)
+            .buttonStyle(
+                NiceButtonStyle(
+                    color: model.isRunning ? .blue.opacity(0.1) : .green.opacity(0.1),
+                    strokeWidth: 4,
+                    strokeColor: model.isRunning ? .blue.opacity(0.3) : .green.opacity(0.3)
+                )
+            )
+            .padding(.horizontal, 12)
         }
         .animation(.smooth, value: model.horses)
         .animation(.smooth, value: isExpanded)
