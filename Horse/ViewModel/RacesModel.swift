@@ -14,7 +14,10 @@ final class RacesModel {
     init(history: RaceHistoryStore) {
         self.history = history
         self.horses = (0..<5).map { idx in
-            Horse(id: idx, color: Color(hue: Double(idx)/5, saturation: 0.8, brightness: 0.9))
+            Horse(
+                id: idx,
+                color: Color(hue: Double(idx)/5, saturation: 0.8, brightness: 0.9)
+            )
         }
     }
 
@@ -31,14 +34,18 @@ final class RacesModel {
         raceTask = nil
         isRunning = false
         raceStart = nil
-        for idx in horses.indices { horses[idx].progress = 0 }
+        for idx in horses.indices {
+            horses[idx].progress = 0
+            horses[idx].speed = Double.random(in: 0.004...0.006)
+        }
     }
 
     // MARK: – Internal loop (≈30 fps)
     private func raceLoop() async {
         while !Task.isCancelled && isRunning {
             for index in horses.indices where horses[index].progress < 1 {
-                horses[index].progress += Double.random(in: 0...0.0025)
+                let variation = Double.random(in: 0.9...1.1)
+                horses[index].progress += horses[index].speed * variation
                 
                 if horses[index].progress > 1 {
                     horses[index].progress = 1
