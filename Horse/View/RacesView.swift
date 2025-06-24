@@ -2,32 +2,57 @@ import SwiftUI
 
 struct RacesView: View {
     @Bindable var model: RacesModel
+    @State private var isExpanded: Bool = false
     
     var body: some View {
         VStack {
+            Text("Дистанция: \(Int(model.trackLength)) м")
+                .font(.title)
+                .bold()
+            
+            let layout = isExpanded
+            ? AnyLayout(VStackLayout(spacing: 12))
+            : AnyLayout(ZStackLayout())
+            
+            ZStack(alignment: .topLeading) {
+                layout {
+                    ForEach(model.horses) { horse in
+                        let isFirst = horse == model.horses.first
+                        
+                        HorseRow(
+                            horse: horse,
+                            isExpanded: isFirst || isExpanded
+                        )
+                    }
+                }
+                .padding(12)
+                .background(.white)
+                .clipShape(.rect(cornerRadius: 12))
+                .padding()
+                
+                Image(systemName: isExpanded ? "arrow.up.right.and.arrow.down.left" : "arrow.down.backward.and.arrow.up.forward")
+                    .resizable()
+                    .frame(width: 12, height: 12)
+                    .foregroundStyle(.primary)
+                    .padding(6)
+                    .background(.blue.gradient.opacity(0.2))
+                    .clipShape(.circle)
+                    .padding(6)
+            }
+            .onTapGesture {
+                isExpanded.toggle()
+            }
+            
+            Spacer()
+            
             Picker("Дистанция", selection: $model.trackLength) {
-                Text("250 м").tag(250.0)
-                Text("500 м").tag(500.0)
-                Text("1000 м").tag(1000.0)
+                ForEach(model.trackLengthOptions, id: \.self) { option in
+                    Text("\(Int(option)) м").tag(option)
+                }
             }
             .pickerStyle(.segmented)
             .disabled(model.isRunning)
-
-            Text("Дистанция: \(Int(model.trackLength)) м")
-                .font(.headline)
-            
-            GeometryReader { geo in
-                VStack(spacing: 12) {
-                    ForEach(model.horses) { horse in
-                        HorseRow(horse: horse,
-                                 trackWidth: geo.size.width,
-                                 trackLength: model.trackLength,
-                                 tickDuration: model.tickDuration)
-                    }
-                }
-                .frame(maxHeight: .infinity)
-            }
-            .frame(height: 260)
+            .padding(.horizontal, 12)
             
             HStack(spacing: 24) {
                 Button("Старт", action: model.start)
@@ -40,7 +65,8 @@ struct RacesView: View {
             .font(.title3)
             .padding(.top, 24)
         }
-        .padding()
-        .animation(.smooth(duration: 1/60), value: model.horses)
+        .animation(.smooth, value: model.horses)
+        .animation(.smooth, value: isExpanded)
+        .background(Color(.secondarySystemBackground))
     }
 }
