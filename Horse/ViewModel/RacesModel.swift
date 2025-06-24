@@ -37,15 +37,20 @@ final class RacesModel {
     // MARK: – Internal loop (≈30 fps)
     private func raceLoop() async {
         while !Task.isCancelled && isRunning {
-            for idx in horses.indices where horses[idx].progress < 1 {
-                horses[idx].progress += Double.random(in: 0.002...0.01)
-                if horses[idx].progress > 1 { horses[idx].progress = 1 }
+            for index in horses.indices where horses[index].progress < 1 {
+                horses[index].progress += Double.random(in: 0.0000001...0.005)
+                
+                if horses[index].progress > 1 {
+                    horses[index].progress = 1
+                }
             }
+            
             if horses.allSatisfy({ $0.progress >= 1 }) {
                 finishRace()
                 break
             }
-            try? await Task.sleep(for: .milliseconds(33))
+            
+            try? await Task.sleep(for: .milliseconds(16))
         }
     }
 
