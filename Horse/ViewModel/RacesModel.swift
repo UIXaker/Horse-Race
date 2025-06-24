@@ -38,7 +38,7 @@ final class RacesModel {
     private func raceLoop() async {
         while !Task.isCancelled && isRunning {
             for index in horses.indices where horses[index].progress < 1 {
-                horses[index].progress += Double.random(in: 0.0000001...0.005)
+                horses[index].progress += Double.random(in: 0...0.0025)
                 
                 if horses[index].progress > 1 {
                     horses[index].progress = 1
