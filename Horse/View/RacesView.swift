@@ -5,6 +5,14 @@ struct RacesView: View {
     
     var body: some View {
         VStack {
+            Picker("Дистанция", selection: $model.trackLength) {
+                Text("250 м").tag(250.0)
+                Text("500 м").tag(500.0)
+                Text("1000 м").tag(1000.0)
+            }
+            .pickerStyle(.segmented)
+            .disabled(model.isRunning)
+
             Text("Дистанция: \(Int(model.trackLength)) м")
                 .font(.headline)
             

@@ -5,7 +5,8 @@ import SwiftUI
 final class RacesModel {
     var horses: [Horse]
     var isRunning = false
-    let trackLength: Double = 1000
+    let trackLengthOptions: [Double] = [250, 500, 1000]
+    var trackLength: Double = 1000
     let tickDuration: TimeInterval = 0.016
     
     private var finishTimes: [Int: TimeInterval] = [:]
