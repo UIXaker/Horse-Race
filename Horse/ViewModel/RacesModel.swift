@@ -44,13 +44,15 @@ final class RacesModel {
         
         for idx in horses.indices {
             horses[idx].progress = 0
-            horses[idx].speed = .random(in: 12...30)
+            horses[idx].speed = .random(in: 12...25)
         }
     }
     
     private func raceLoop() async {
         while !Task.isCancelled && isRunning {
             for index in horses.indices where horses[index].progress < 1 {
+                let delta = Double.random(in: -1...1)
+                horses[index].speed = min(max(12, horses[index].speed + delta), 30)
                 horses[index].progress += horses[index].speed * tickDuration / trackLength
                 
                 if horses[index].progress > 1 {
