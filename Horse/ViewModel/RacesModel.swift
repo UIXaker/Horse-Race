@@ -12,16 +12,17 @@ final class RacesModel {
 
     init(history: RaceHistoryStore) {
         self.history = history
-        self.horses = (0..<5).map { idx in
+        self.horses = (0..<5).map { index in
             Horse(
-                id: idx,
-                color: Color(hue: Double(idx)/5, saturation: 0.8, brightness: 0.9)
+                id: index,
+                color: Color(hue: Double(index)/5, saturation: 0.8, brightness: 0.9)
             )
         }
     }
 
     func start() {
         guard !isRunning else { return }
+        
         isRunning = true
         raceStart = Date()
         raceTask = Task { await raceLoop() }
@@ -32,6 +33,7 @@ final class RacesModel {
         raceTask = nil
         isRunning = false
         raceStart = nil
+        
         for idx in horses.indices {
             horses[idx].progress = 0
             horses[idx].speed = Double.random(in: 0.004...0.006)
@@ -62,13 +64,17 @@ final class RacesModel {
         isRunning = false
         raceTask?.cancel()
         raceTask = nil
+        
         guard let start = raceStart else { return }
         let placements = horses.sorted { $0.progress > $1.progress }.map { $0.id }
+        
         let result = RaceResult(
             date: Date(),
             winnerIndex: placements.first ?? 0,
             duration: Date().timeIntervalSince(start),
-            placements: placements)
+            placements: placements
+        )
+        
         history.results.insert(result, at: 0)
     }
 }
