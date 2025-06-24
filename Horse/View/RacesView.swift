@@ -1,11 +1,13 @@
 import SwiftUI
+import AVKit
 
 struct RacesView: View {
     @Bindable var model: RacesModel
     @State private var isExpanded: Bool = false
+    @State private var showLive: Bool = false
     
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 0) {
             Text("Дистанция: \(Int(model.trackLength)) м")
                 .font(.title)
                 .bold()
@@ -43,8 +45,34 @@ struct RacesView: View {
                 isExpanded.toggle()
             }
             
-            
-            
+            if model.isRunning {
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        showLive.toggle()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "record.circle")
+                                .font(.footnote)
+                                .symbolEffect(.pulse.byLayer)
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.red)
+                            
+                            Text("Live")
+                                .font(.body)
+                                .foregroundStyle(.red)
+                        }
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 8)
+                        .background(.white)
+                        .clipShape(.rect(cornerRadius: 8))
+                    }
+                }
+                .padding(.trailing)
+                .padding(.top, -6)
+                .transition(.opacity)
+            }
             
             Spacer()
             
