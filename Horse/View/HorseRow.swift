@@ -11,7 +11,7 @@ struct HorseRow: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(horse.name)
                 .font(.headline)
             
@@ -27,7 +27,7 @@ struct HorseRow: View {
                         .frame(width: 36, height: 36)
                         .foregroundColor(horse.color)
                     
-                    Text(String(format: "%.1f км/ч", speedKMH))
+                    Text(String(format: "%.0f км/ч", speedKMH))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
