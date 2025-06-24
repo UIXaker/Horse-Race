@@ -5,17 +5,42 @@ struct HistoryView: View {
 
     var body: some View {
         NavigationStack {
-            List(history.results) { result in
-                VStack(alignment: .leading, spacing: 4) {
+            HistoryList(results: history.results)
+                .navigationTitle("История")
+        }
+    }
+}
+
+private struct HistoryList: View {
+    let results: [RaceResult]
+    @State private var expanded: Set<RaceResult.ID> = []
+
+    var body: some View {
+        List(results) { result in
+            DisclosureGroup(
+                isExpanded: Binding(
+                    get: { expanded.contains(result.id) },
+                    set: { isExpanded in
+                        if isExpanded { expanded.insert(result.id) } else { expanded.remove(result.id) }
+                    }
+                )
+            ) {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(result.results) { placement in
+                        Text("\(placement.place). \(placement.name) — " + String(format: "%.2f c", placement.time))
+                    }
+                }
+                .padding(.top, 4)
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
                     Text("Заезд от \(result.date.formatted(date: .numeric, time: .shortened))")
                         .font(.headline)
-                    Text("Победитель: Лошадь \(result.winnerIndex + 1)")
+                    Text("Победитель: \(result.winnerName)")
                     Text(String(format: "Время: %.2f сек.", result.duration))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle("История")
         }
     }
 }

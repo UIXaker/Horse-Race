@@ -2,14 +2,15 @@ import SwiftUI
 
 struct Horse: Identifiable, Equatable {
     let id: Int
+    let name: String
     let color: Color
-    var progress: Double = 0
     var speed: Double
-
-    init(id: Int, color: Color, speed: Double = Double.random(in: 0.004...0.006)) {
+    var progress: Double = 0
+    
+    init(id: Int, name: String, color: Color, speed: Double = .random(in: 12...30)) {
         self.id = id
+        self.name = name
         self.color = color
-        self.progress = 0
         self.speed = speed
     }
 }

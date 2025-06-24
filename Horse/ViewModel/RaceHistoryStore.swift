@@ -10,8 +10,11 @@ final class RaceHistoryStore {
     init() { load() }
 
     private func load() {
-        guard let data = UserDefaults.standard.data(forKey: key),
-              let decoded = try? JSONDecoder().decode([RaceResult].self, from: data) else { return }
+        guard
+            let data = UserDefaults.standard.data(forKey: key),
+            let decoded = try? JSONDecoder().decode([RaceResult].self, from: data)
+        else { return }
+        
         results = decoded
     }
     private func save() {

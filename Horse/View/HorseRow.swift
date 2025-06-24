@@ -3,19 +3,36 @@ import SwiftUI
 struct HorseRow: View {
     let horse: Horse
     let trackWidth: CGFloat
-
+    let trackLength: Double
+    let tickDuration: TimeInterval
+    
+    private var speedKMH: Double {
+        horse.speed * 3.6
+    }
+    
     var body: some View {
-        ZStack(alignment: .leading) {
-            RoundedRectangle(cornerRadius: 4)
-                .fill(Color.gray.opacity(0.15))
-                .frame(height: 12)
+        VStack(alignment: .leading, spacing: 2) {
+            Text(horse.name)
+                .font(.headline)
             
-            Image(systemName: "figure.equestrian.sports")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 36, height: 36)
-                .foregroundColor(horse.color)
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.gray.opacity(0.15))
+                    .frame(height: 12)
+                
+                VStack {
+                    Image(systemName: "figure.equestrian.sports")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(horse.color)
+                    
+                    Text(String(format: "%.1f км/ч", speedKMH))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
                 .offset(x: CGFloat(horse.progress) * (trackWidth - 36))
+            }
         }
     }
 }

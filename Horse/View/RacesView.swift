@@ -2,19 +2,25 @@ import SwiftUI
 
 struct RacesView: View {
     @Bindable var model: RacesModel
-
+    
     var body: some View {
         VStack {
+            Text("Дистанция: \(Int(model.trackLength)) м")
+                .font(.headline)
+            
             GeometryReader { geo in
                 VStack(spacing: 12) {
                     ForEach(model.horses) { horse in
-                        HorseRow(horse: horse, trackWidth: geo.size.width)
+                        HorseRow(horse: horse,
+                                 trackWidth: geo.size.width,
+                                 trackLength: model.trackLength,
+                                 tickDuration: model.tickDuration)
                     }
                 }
                 .frame(maxHeight: .infinity)
             }
             .frame(height: 260)
-
+            
             HStack(spacing: 24) {
                 Button("Старт") { model.start() }
                     .buttonStyle(.borderedProminent)
