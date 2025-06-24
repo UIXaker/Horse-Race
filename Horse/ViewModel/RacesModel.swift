@@ -1,6 +1,5 @@
 import SwiftUI
 
-// MARK: – Game logic (Observable model + Swift Concurrency)
 @Observable
 @MainActor
 final class RacesModel {
@@ -21,7 +20,6 @@ final class RacesModel {
         }
     }
 
-    // MARK: – Public API
     func start() {
         guard !isRunning else { return }
         isRunning = true
@@ -40,7 +38,6 @@ final class RacesModel {
         }
     }
 
-    // MARK: – Internal loop (≈30 fps)
     private func raceLoop() async {
         while !Task.isCancelled && isRunning {
             for index in horses.indices where horses[index].progress < 1 {
