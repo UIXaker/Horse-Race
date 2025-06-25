@@ -34,14 +34,15 @@ final class PictureInPicturePlayer: NSObject, AVPictureInPictureControllerDelega
         self.pipController?.delegate = self
     }
     
-    func toggle() {
+    func showPIP(_ show: Bool) {
         guard let pipController else { return }
         
-        if pipController.isPictureInPictureActive {
+        if !show {
             pipController.stopPictureInPicture()
             player.isMuted = true
         } else {
             player.isMuted = false
+            player.play()
             pipController.startPictureInPicture()
         }
     }

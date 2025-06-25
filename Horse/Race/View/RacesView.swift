@@ -52,13 +52,13 @@ struct RacesView: View {
                 }
             }
         }
-        .onChange(of: showLive) { oldValue, newValue in
-            pipManager.toggle()
+        .onChange(of: showLive) { _, show in
+            pipManager.showPIP(show)
         }
-        .onChange(of: model.isRunning) { oldValue, newValue in
-            newValue ? pipManager.start() : pipManager.stop()
+        .onChange(of: model.isRunning) { _, isRunning in
+            isRunning ? pipManager.start() : pipManager.stop()
             
-            if !newValue {
+            if !isRunning {
                 showLive = false
             }
         }
