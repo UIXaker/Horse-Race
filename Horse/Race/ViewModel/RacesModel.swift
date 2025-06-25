@@ -1,17 +1,13 @@
+import Observation
 import SwiftUI
 import Kingfisher
 
 @Observable
-@MainActor
 final class RacesModel {
     var horses: [Horse]
     var isRunning = false
     let trackLengthOptions: [Double] = [250, 500, 1000]
-    var trackLength: Double = 1000
-    let tickDuration: TimeInterval = 0.016
-    var resource: LocalFileImageDataProvider
-
-    private var finishTimes: [Int: TimeInterval] = [:]
+    var trackLength: Double = 500
 
     var sortedHorses: [Horse] {
         let finished = horses
@@ -24,6 +20,9 @@ final class RacesModel {
 
         return finished + unfinished
     }
+    
+    private let tickDuration: TimeInterval = 0.016
+    private var finishTimes: [Int: TimeInterval] = [:]
     
     private let history: RaceHistoryStore
     private var raceStart: Date?
@@ -40,9 +39,6 @@ final class RacesModel {
                 color: Color(hue: Double(index)/5, saturation: 0.8, brightness: 0.9)
             )
         }
-        
-        let path = Bundle.main.url(forResource: "Finish", withExtension: "gif")!
-        resource = LocalFileImageDataProvider(fileURL: path)
     }
     
     func start() {
