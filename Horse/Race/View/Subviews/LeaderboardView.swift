@@ -71,7 +71,7 @@ struct LeaderboardView: View {
                     }
                 }
                 .padding(12)
-                .background(.primary.opacity(0.1))
+                .background(.primary.opacity(0.05))
                 .clipShape(.rect(cornerRadius: 12))
                 .readSize { winnerWidth = $0.width }
             }

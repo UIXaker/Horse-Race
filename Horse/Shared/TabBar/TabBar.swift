@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WithTabBar<Content>: View where Content: View {
-    @State private var selection: Tabs = .home
+    @State private var selection: Tabs = .history
     @ViewBuilder var content: (Tabs) -> Content
     
     var body: some View {

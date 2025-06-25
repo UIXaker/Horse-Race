@@ -5,6 +5,7 @@ final class RaceHistoryStore {
     var results: [RaceResult] = [] {
         didSet { save() }
     }
+    
     private let key = "race_history"
 
     init() { load() }
@@ -17,8 +18,14 @@ final class RaceHistoryStore {
         
         results = decoded
     }
+    
     private func save() {
         guard let data = try? JSONEncoder().encode(results) else { return }
         UserDefaults.standard.set(data, forKey: key)
+    }
+
+    func clear() {
+        results.removeAll()
+        UserDefaults.standard.removeObject(forKey: key)
     }
 }

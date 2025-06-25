@@ -103,9 +103,10 @@ final class RacesModel {
         let result = RaceResult(
             date: Date(),
             duration: finishTimes.values.max() ?? 0,
-            results: placements
+            length: trackLength,
+            placements: placements
         )
         
-        history.results.insert(result, at: 0)
+        history.results.append(result)
     }
 }
