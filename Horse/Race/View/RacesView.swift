@@ -3,13 +3,15 @@ import AVKit
 import Kingfisher
 
 struct RacesView: View {
-    @Bindable var model: RacesModel
+    @Environment(RacesModel.self) private var model
     @State private var isExpanded: Bool = false
     @State private var showLive: Bool = false
     @State private var winnerWidth: CGFloat = 0
     @State private var speedWidth: CGFloat = 0
     
     var body: some View {
+        @Bindable var model = model
+        
         VStack(spacing: 0) {
             Text("Дистанция: \(Int(model.trackLength)) м")
                 .font(.title)
@@ -36,8 +38,8 @@ struct RacesView: View {
             )
             .padding(.horizontal, 12)
         }
-        .animation(.smooth, value: model.horses)
-        .animation(.smooth, value: isExpanded)
+        .animation(.smooth(duration: 0.3), value: model.horses)
+        .animation(.smooth(duration: 0.3), value: isExpanded)
         .background(Color(.secondarySystemBackground))
     }
 }

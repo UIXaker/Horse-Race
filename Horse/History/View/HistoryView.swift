@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @Bindable var history: RaceHistoryStore
+    @Environment(RaceHistoryStore.self) private var history
 
     var body: some View {
         NavigationStack {
