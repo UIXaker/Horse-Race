@@ -11,8 +11,20 @@ final class RacesModel {
     let tickDuration: TimeInterval = 0.016
     
     var resource: LocalFileImageDataProvider
-    
+
     private var finishTimes: [Int: TimeInterval] = [:]
+
+    var sortedHorses: [Horse] {
+        let finished = horses
+            .filter { finishTimes[$0.id] != nil }
+            .sorted { (finishTimes[$0.id] ?? 0) < (finishTimes[$1.id] ?? 0) }
+
+        let unfinished = horses
+            .filter { finishTimes[$0.id] == nil }
+            .sorted { $0.progress > $1.progress }
+
+        return finished + unfinished
+    }
     
     private let history: RaceHistoryStore
     private var raceStart: Date?

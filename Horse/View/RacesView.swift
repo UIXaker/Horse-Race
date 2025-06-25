@@ -57,18 +57,20 @@ struct RacesView: View {
                     }
                     
                     HStack(alignment: .top, spacing: 16) {
+                        let sortedHorses = model.sortedHorses
+                        let firstFinished = sortedHorses.first?.progress ?? 0 >= 1
+
                         VStack(alignment: .leading, spacing: 6) {
                             ForEach(model.horses.indices, id: \.self) { index in
                                 Text("#\(index + 1)")
                                     .font(.title3)
                                     .bold()
-                                    .foregroundStyle(.primary)
+                                    .foregroundStyle(firstFinished && index == 0 ? .white : .primary)
                                     .frame(height: 36)
                             }
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 6) {
-                            let sortedHorses = model.horses.sorted { $0.progress > $1.progress }
                             ForEach(sortedHorses) { horse in
                                 HStack(spacing: 12) {
                                     Image(systemName: "figure.equestrian.sports")
