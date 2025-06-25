@@ -8,6 +8,7 @@ struct RacesView: View {
     @State private var showLive: Bool = false
     @State private var winnerWidth: CGFloat = 0
     @State private var speedWidth: CGFloat = 0
+    @State private var pipManager = PictureInPicturePlayer()
     
     var body: some View {
         @Bindable var model = model
@@ -24,8 +25,11 @@ struct RacesView: View {
             
             LeaderboardView(
                 sortedHorses: model.sortedHorses,
-                isRunning: model.isRunning
+                isRunning: model.isRunning,
+                showLive: $showLive
             )
+            
+            HiddenPiPView(manager: pipManager)
             
             Spacer()
             
@@ -41,5 +45,22 @@ struct RacesView: View {
         .animation(.smooth(duration: 0.3), value: model.horses)
         .animation(.smooth(duration: 0.3), value: isExpanded)
         .background(Color(.secondarySystemBackground))
+        .overlay {
+            if let result = model.latestResult {
+                WinnerOverlay(winnerName: result.winnerName) {
+                    model.latestResult = nil
+                }
+            }
+        }
+        .onChange(of: showLive) { oldValue, newValue in
+            pipManager.toggle()
+        }
+        .onChange(of: model.isRunning) { oldValue, newValue in
+            newValue ? pipManager.start() : pipManager.stop()
+            
+            if !newValue {
+                showLive = false
+            }
+        }
     }
 }

@@ -6,8 +6,9 @@ import Kingfisher
 final class RacesModel {
     var horses: [Horse]
     var isRunning = false
-    let trackLengthOptions: [Double] = [250, 500, 1000]
-    var trackLength: Double = 500
+    let trackLengthOptions: [Double] = [50, 250, 500, 1000]
+    var trackLength: Double = 50
+    var latestResult: RaceResult?
 
     var sortedHorses: [Horse] {
         let finished = horses
@@ -32,11 +33,13 @@ final class RacesModel {
         self.history = history
         
         let defaultNames = ["Буян", "Пегас", "Ветер", "Гром", "Яков"]
+        let defaultColors: [Color] = [.cyan, .indigo, .orange, .green, .pink]
+        
         horses = (0..<5).map { index in
             Horse(
                 id: index,
                 name: defaultNames[index],
-                color: Color(hue: Double(index)/5, saturation: 0.8, brightness: 0.9)
+                color: defaultColors[index]
             )
         }
     }
@@ -55,6 +58,7 @@ final class RacesModel {
         raceTask = nil
         raceStart = nil
         isRunning = false
+        latestResult = nil
         finishTimes.removeAll()
         
         for idx in horses.indices {
@@ -106,7 +110,9 @@ final class RacesModel {
             length: trackLength,
             placements: placements
         )
-        
+
         history.results.append(result)
+        latestResult = result
+        Task { await APIClient.send(result: result) }
     }
 }

@@ -38,36 +38,39 @@ private struct HistoryList: View {
     @State private var expanded: Set<RaceResult.ID> = []
     
     var body: some View {
-        VStack(spacing: 18) {
-            ForEach(results.indices.reversed(), id: \.self) { index in
-                let result = results[index]
-                
-                VStack(spacing: 4) {
-                    HStack {
-                        Text("Заезд #\(index + 1)")
-                        Spacer()
-                        Text(result.date.formatted(date: .numeric, time: .shortened))
-                    }
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 6)
+        ScrollView {
+            VStack(spacing: 18) {
+                ForEach(results.indices.reversed(), id: \.self) { index in
+                    let result = results[index]
                     
-                    HistoryRow(result: result, isExpanded: expanded.contains(result.id))
-                        .onTapGesture {
-                            if expanded.contains(result.id) {
-                                expanded.remove(result.id)
-                            } else {
-                                expanded.insert(result.id)
-                            }
+                    VStack(spacing: 4) {
+                        HStack {
+                            Text("Заезд #\(index + 1)")
+                            Spacer()
+                            Text(result.date.formatted(date: .numeric, time: .shortened))
                         }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 6)
+                        
+                        HistoryRow(result: result, isExpanded: expanded.contains(result.id))
+                            .onTapGesture {
+                                if expanded.contains(result.id) {
+                                    expanded.remove(result.id)
+                                } else {
+                                    expanded.insert(result.id)
+                                }
+                            }
+                    }
+                    .padding(.horizontal, 12)
                 }
-                .padding(.horizontal, 12)
+                
+                Color.clear
             }
-            
-            Color.clear
+            .animation(.smooth(duration: 0.3), value: expanded)
+            .animation(.smooth(duration: 0.3), value: results)
         }
-        .animation(.smooth(duration: 0.3), value: expanded)
-        .animation(.smooth(duration: 0.3), value: results)
+        .background(Color(.secondarySystemBackground))
         .overlay {
             if results.isEmpty {
                 ContentUnavailableView(
@@ -77,6 +80,5 @@ private struct HistoryList: View {
                 )
             }
         }
-        .background(Color(.secondarySystemBackground))
     }
 }

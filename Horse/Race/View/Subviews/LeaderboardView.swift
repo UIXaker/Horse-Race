@@ -5,17 +5,16 @@ struct LeaderboardView: View {
     let sortedHorses: [Horse]
     let isRunning: Bool
     
-    @State private var showLive = false
+    @Binding var showLive: Bool
+    
+    @State private var finishGifResource: LocalFileImageDataProvider?
     @State private var winnerWidth: CGFloat = 0
     @State private var speedWidth: CGFloat = 0
-        
+    
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             ZStack(alignment: .top) {
-                if sortedHorses.first?.progress ?? 0 >= 1 {
-                    let path = Bundle.main.url(forResource: "Finish", withExtension: "gif")!
-                    let finishGifResource = LocalFileImageDataProvider(fileURL: path)
-                    
+                if sortedHorses.first?.progress ?? 0 >= 1, let finishGifResource {
                     KFAnimatedImage(resource: finishGifResource)
                         .scaledToFit()
                         .frame(width: winnerWidth, height: 36 + 12)
@@ -104,5 +103,9 @@ struct LeaderboardView: View {
         }
         .padding(.horizontal)
         .geometryGroup()
+        .task {
+            let path = Bundle.main.url(forResource: "Finish", withExtension: "gif")!
+            finishGifResource = LocalFileImageDataProvider(fileURL: path)
+        }
     }
 }
