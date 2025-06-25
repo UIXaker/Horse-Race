@@ -9,7 +9,6 @@ final class RacesModel {
     let trackLengthOptions: [Double] = [250, 500, 1000]
     var trackLength: Double = 1000
     let tickDuration: TimeInterval = 0.016
-    
     var resource: LocalFileImageDataProvider
 
     private var finishTimes: [Int: TimeInterval] = [:]

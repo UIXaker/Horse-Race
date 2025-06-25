@@ -7,6 +7,7 @@ struct RacesView: View {
     @State private var isExpanded: Bool = false
     @State private var showLive: Bool = false
     @State private var winnerWidth: CGFloat = 0
+    @State private var speedWidth: CGFloat = 0
     
     var body: some View {
         VStack(spacing: 0) {
@@ -60,6 +61,14 @@ struct RacesView: View {
                         let sortedHorses = model.sortedHorses
                         let firstFinished = sortedHorses.first?.progress ?? 0 >= 1
 
+                        if speedWidth < 1 {
+                            Text("108 км/ч")
+                                .font(.caption)
+                                .lineLimit(1)
+                                .readSize { speedWidth = $0.width }
+                                .hidden()
+                        }
+
                         VStack(alignment: .leading, spacing: 6) {
                             ForEach(model.horses.indices, id: \.self) { index in
                                 Text("#\(index + 1)")
@@ -90,6 +99,7 @@ struct RacesView: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                         .lineLimit(1)
+                                        .frame(width: speedWidth, alignment: .leading)
                                 }
                                 .geometryGroup()
                             }
