@@ -1,10 +1,12 @@
 import SwiftUI
 import AVKit
+import Kingfisher
 
 struct RacesView: View {
     @Bindable var model: RacesModel
     @State private var isExpanded: Bool = false
     @State private var showLive: Bool = false
+    @State private var winnerWidth: CGFloat = 0
     
     var body: some View {
         VStack(spacing: 0) {
@@ -45,10 +47,61 @@ struct RacesView: View {
                 isExpanded.toggle()
             }
             
-            if model.isRunning {
-                HStack {
-                    Spacer()
+            HStack(alignment: .top, spacing: 0) {
+                ZStack(alignment: .top) {
+                    if let firstHorse = model.horses.sorted(by: { $0.progress > $1.progress }).first, firstHorse.progress >= 1 {
+                        KFAnimatedImage(resource: model.resource)
+                            .scaledToFit()
+                            .frame(width: winnerWidth, height: 36 + 12)
+                            .clipShape(.rect(cornerRadius: 12))
+                    }
                     
+                    HStack(alignment: .top, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(model.horses.indices, id: \.self) { index in
+                                Text("#\(index + 1)")
+                                    .font(.title3)
+                                    .bold()
+                                    .foregroundStyle(.primary)
+                                    .frame(height: 36)
+                            }
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 6) {
+                            let sortedHorses = model.horses.sorted { $0.progress > $1.progress }
+                            ForEach(sortedHorses) { horse in
+                                HStack(spacing: 12) {
+                                    Image(systemName: "figure.equestrian.sports")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 36, height: 36)
+                                        .foregroundColor(horse.color)
+                                    
+                                    let isWinner = horse.progress >= 1 && horse == sortedHorses.first
+                                    Text(horse.name)
+                                        .font(.body.weight(.medium))
+                                        .foregroundStyle(isWinner ? .white : .primary)
+                                        .lineLimit(1)
+                                    
+                                    let speed = Int(horse.speed * 3.6)
+                                    Text("\(speed) км/ч")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(1)
+                                }
+                                .geometryGroup()
+                            }
+                        }
+                    }
+                    .padding(12)
+                    .background(.primary.opacity(0.1))
+                    .clipShape(.rect(cornerRadius: 12))
+                    .readSize { winnerWidth = $0.width }
+                }
+                
+                Spacer()
+                
+                if model.isRunning {
                     Button {
                         showLive.toggle()
                     } label: {
@@ -68,11 +121,12 @@ struct RacesView: View {
                         .background(.white)
                         .clipShape(.rect(cornerRadius: 8))
                     }
+                    .padding(.top, -6)
+                    .transition(.opacity)
                 }
-                .padding(.trailing)
-                .padding(.top, -6)
-                .transition(.opacity)
             }
+            .padding(.horizontal)
+            .geometryGroup()
             
             Spacer()
             
@@ -102,4 +156,19 @@ struct RacesView: View {
         .animation(.smooth, value: isExpanded)
         .background(Color(.secondarySystemBackground))
     }
+}
+
+struct KFAnimatedImage: UIViewRepresentable {
+    var resource: ImageDataProvider?
+
+    func makeUIView(context: Context) -> AnimatedImageView {
+        let view = AnimatedImageView()
+        view.contentMode = .scaleAspectFit
+        return view
+    }
+    
+    func updateUIView(_ uiView: AnimatedImageView, context: Context) {
+        uiView.kf.setImage(with: resource)
+    }
+    
 }
